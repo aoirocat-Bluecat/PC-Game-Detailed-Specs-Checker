@@ -260,6 +260,40 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* シェアボタン用スタイル */
+        .share-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn-twitter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #000000;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-twitter:hover {
+            opacity: 0.8;
+            color: white;
+        }
+        
+        .btn-twitter svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
     </style>
 </head>
 <body>
@@ -361,7 +395,7 @@
                         <option value="15">1GB VRAM 以下</option>
                     </optgroup>
                     <optgroup label="NVIDIA RTX 50シリーズ (最新世代)">
-                        <option value="250">RTX 5090 </option>
+                        <option value="250">RTX 5090</option>
                         <option value="200">RTX 5080</option>
                         <option value="170">RTX 5070 Ti</option>
                         <option value="150">RTX 5070</option>
@@ -641,6 +675,14 @@
         
         <!-- FPS表示エリア (動的に生成) -->
         <div id="fps-container"></div>
+        
+        <!-- シェアボタンエリア -->
+        <div class="share-container" id="share-container" style="display: none;">
+            <a href="#" id="share-twitter" target="_blank" rel="noopener noreferrer" class="btn-twitter">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                結果をポストする
+            </a>
+        </div>
     </div>
 </div>
 
@@ -652,10 +694,8 @@
 
         const options = Array.from(selectElem.options);
         
-        // 英語のキーワード（Quad, i5, 2GBなど）対応（大文字小文字を区別せず検索）
         let matches = options.filter(opt => opt.text.toLowerCase().includes(text));
         
-        // 半角英数字の型番検索対応（例: "3060"）
         if (matches.length === 0) {
             const numbers = text.match(/\d{3,5}/g); 
             if (numbers) {
@@ -667,7 +707,6 @@
         }
 
         if (matches.length > 0) {
-            // 文字数が少ないものを優先 (例: "i5"と検索した時に "Core i5-14600K" より "Core i5 (世代指定なし)" を優先させる)
             matches.sort((a, b) => a.text.length - b.text.length);
             if (selectElem.selectedIndex !== matches[0].index) {
                 selectElem.selectedIndex = matches[0].index;
@@ -700,16 +739,21 @@
         });
     }
 
-    // FPSによる文字色判定
     function getFpsColor(fps) {
-        if (fps >= 144) return "#3b82f6"; // 青(超快適)
-        if (fps >= 60) return "#10b981";  // 緑(快適)
-        if (fps >= 30) return "#f59e0b";  // オレンジ(妥協)
-        return "#ef4444";                 // 赤(厳しい)
+        if (fps >= 144) return "#3b82f6";
+        if (fps >= 60) return "#10b981";  
+        if (fps >= 30) return "#f59e0b";  
+        return "#ef4444";                 
+    }
+
+    // 文字数オーバーを防ぐため、長い型番（「/」や「(」を含むもの）を短縮する関数
+    function shortenText(text) {
+        let shortName = text.split('/')[0].trim();
+        shortName = shortName.split('(')[0].trim();
+        return shortName;
     }
 
     function checkSpecs() {
-        // スペック取得
         const myCpu = parseInt(document.getElementById('my-cpu').value);
         const myGpu = parseInt(document.getElementById('my-gpu').value);
         const myRam = parseInt(document.getElementById('my-ram').value);
@@ -720,7 +764,6 @@
         const gameGpuRec = parseInt(document.getElementById('game-gpu').value);
         const gameRamRec = parseInt(document.getElementById('game-ram').value);
 
-        // ボーダーライン計算
         const cpuMinThreshold = gameCpuRec - 30;
         const gpuMinThreshold = gameGpuRec - 30;
         const ramMinThreshold = gameRamRec > 8 ? 8 : 4;
@@ -728,7 +771,6 @@
         let status = 2; 
         let detailsHtml = '';
 
-        // 各パーツ評価関数
         function evaluatePart(partName, myVal, myText, recVal, minVal, isRam = false) {
             let msg = ''; let color = '';
             let displayVal = isRam ? `${myVal} GB` : myText;
@@ -752,7 +794,6 @@
         detailsHtml += evaluatePart('グラボ(GPU)', myGpu, myGpuText, gameGpuRec, gpuMinThreshold);
         detailsHtml += evaluatePart('メモリ', myRam, myRam, gameRamRec, ramMinThreshold, true);
 
-        // ====== 📊 FPS 推計ロジック ======
         const gpuRatio = myGpu / Math.max(10, gameGpuRec); 
         const cpuRatio = myCpu / Math.max(10, gameCpuRec);
         const bottleneckRatio = Math.min(gpuRatio, cpuRatio);
@@ -773,9 +814,7 @@
         fpsHigh = fpsHigh > 999 ? 999 : fpsHigh;
         fpsMid = fpsMid > 999 ? 999 : fpsMid;
         fpsLow = fpsLow > 999 ? 999 : fpsLow;
-        // ===================================
 
-        // 描画処理
         const resultBox = document.getElementById('result');
         const resultTitle = document.getElementById('result-title');
         const resultDetails = document.getElementById('result-details');
@@ -785,18 +824,25 @@
         resultDetails.innerHTML = detailsHtml;
         resultTitle.className = 'result-title'; 
         
+        let statusEmojiText = "";
+        let statusShortText = ""; // X制約回避用の短い判定テキスト
         if (status === 2) {
-            resultTitle.innerHTML = '🎉 判定：高設定で快適にプレイ可能です！';
+            statusEmojiText = "🎉 高設定で快適にプレイ可能です！";
+            statusShortText = "🎉 高設定で快適！";
+            resultTitle.innerHTML = statusEmojiText;
             resultTitle.classList.add('status-ok');
         } else if (status === 1) {
-            resultTitle.innerHTML = '🔧 判定：画質を「低設定」にすれば遊べます！';
+            statusEmojiText = "🔧 画質を「低設定」にすれば遊べます！";
+            statusShortText = "🔧 低設定なら遊べる！";
+            resultTitle.innerHTML = statusEmojiText;
             resultTitle.classList.add('status-warn');
         } else {
-            resultTitle.innerHTML = '😭 判定：このPCで遊ぶのはかなり厳しいです';
+            statusEmojiText = "😭 このPCで遊ぶのはかなり厳しいです...";
+            statusShortText = "😭 動作は厳しい...";
+            resultTitle.innerHTML = statusEmojiText;
             resultTitle.classList.add('status-bad');
         }
 
-        // FPS表示エリアの組み立て
         fpsContainer.innerHTML = `
             <div class="fps-section">
                 <h3>📊 推定FPS (フルHD 1080p)</h3>
@@ -818,6 +864,27 @@
             </div>
         `;
         
+        // --- X(Twitter) シェア機能の構築 ---
+        const siteUrl = "https://aoirocat-bluecat.github.io/PC-Game-Detailed-Specs-Checker/";
+        
+        const reqCpuText = document.getElementById('game-cpu').options[document.getElementById('game-cpu').selectedIndex].text;
+        const reqGpuText = document.getElementById('game-gpu').options[document.getElementById('game-gpu').selectedIndex].text;
+
+        // 型番を短縮して文字数オーバーを回避する
+        const shortMyCpu = shortenText(myCpuText);
+        const shortMyGpu = shortenText(myGpuText);
+        const shortReqCpu = shortenText(reqCpuText);
+        const shortReqGpu = shortenText(reqGpuText);
+
+        const shareText = `🎮PCゲーム スペックチェッカー\n判定: ${statusShortText}\n\n💻自PC: ${shortMyCpu} / ${shortMyGpu} / ${myRam}GB\n🕹要求: ${shortReqCpu} / ${shortReqGpu} / ${gameRamRec}GB\n\n📊推定FPS: 高 ${fpsHigh} / 中 ${fpsMid} / 低 ${fpsLow}\n\n#PCゲームスペックチェッカー\n`;
+        
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(siteUrl)}`;
+        
+        const shareBtn = document.getElementById('share-twitter');
+        shareBtn.href = twitterUrl;
+        document.getElementById('share-container').style.display = 'block';
+        // -----------------------------------
+
         resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 </script>
