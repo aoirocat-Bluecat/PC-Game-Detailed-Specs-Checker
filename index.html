@@ -275,66 +275,79 @@
             
             <label>CPU (プロセッサ)</label>
             <div class="search-select-group">
-                <input type="text" placeholder="🔍 型番で検索 (例: 12400, 5600X)" oninput="searchSelect(this, 'my-cpu')">
+                <input type="text" placeholder="🔍 検索 (例: 285K, Ultra 7, 5600X)" oninput="searchSelect(this, 'my-cpu')">
                 <select id="my-cpu">
-                    <optgroup label="Intel デスクトップ ハイエンド (i9 / i7)">
+                    <optgroup label="Intel Core Ultra (最新デスクトップ)">
+                        <option value="170">Core Ultra 9 285K</option>
+                        <option value="150">Core Ultra 7 265K</option>
+                        <option value="130">Core Ultra 5 245K</option>
+                    </optgroup>
+                    <optgroup label="Intel Core (i9 / i7 / i5)">
                         <option value="160">Core i9-14900K / 13900K / 12900K</option>
                         <option value="140">Core i7-14700K / 13700K</option>
-                        <option value="110">Core i7-12700 / 11700 / 10700</option>
-                        <option value="85">Core i7-9700 / 8700</option>
-                        <option value="60">Core i7-7700 / 6700 / 4770</option>
-                    </optgroup>
-                    <optgroup label="Intel デスクトップ ミドル/エントリー">
                         <option value="120">Core i5-14600K / 13600K</option>
-                        <option value="100">Core i5-14400 / 13400 / 12400</option>
-                        <option value="75">Core i5-11400 / 10400 / 11500</option>
+                        <option value="110">Core i7-12700 / 11700 / 10700</option>
+                        <option value="100">Core i5-14400 / 13400</option>
+                        <option value="90">Core i5-12400</option>
+                        <option value="75">Core i5-11400 / 10400</option>
+                        <option value="70">Core i7-9700 / 8700</option>
+                        <option value="50">Core i7-7700 / 6700 / 4770</option>
+                        <option value="40">Core i5-9400 / 8400 / 7500</option>
+                    </optgroup>
+                    <optgroup label="Intel Core i3 / Pentium / Celeron">
                         <option value="70">Core i3-14100 / 13100 / 12100</option>
-                        <option value="55">Core i5-9400 / 8400</option>
-                        <option value="50">Core i3-10100 / 9100 / 8100</option>
-                        <option value="40">Core i5-7500 / 6500 / 4570</option>
-                        <option value="35">Core i3-7100 / 6100 以前</option>
-                        <option value="25">Pentium Gold (G6400 等)</option>
+                        <option value="50">Core i3-10100 / 9100</option>
+                        <option value="30">Core i5-6500 / 4570 / i3-8100</option>
+                        <option value="20">Core i3 (旧型) / Pentium Gold</option>
                         <option value="15">Celeron / Atom</option>
                     </optgroup>
-                    <optgroup label="Intel ノートPC向け (H / HXシリーズ等)">
-                        <option value="130">Core i9-13900H / i7-13700H (第13世代ノート用)</option>
-                        <option value="110">Core i9-12900H / i7-12700H (第12世代ノート用)</option>
-                        <option value="90">Core i7-11800H / i5-12500H</option>
-                        <option value="75">Core i7-10875H / 10750H / i5-11400H</option>
-                        <option value="55">Core i7-9750H / 8750H / i5-10300H</option>
-                        <option value="40">Core i5-9300H / 8300H</option>
-                    </optgroup>
-                    <optgroup label="Intel ノートPC向け 薄型省電力 (U / Pシリーズ)">
-                        <option value="75">Core i7-1360P / 1260P</option>
-                        <option value="50">Core i7-1165G7 / i5-1135G7</option>
-                        <option value="35">Core i7-10510U / 8565U / i5-10210U</option>
-                        <option value="25">Core i5-8250U / 7200U 以前</option>
-                    </optgroup>
                     <optgroup label="AMD Ryzen デスクトップ">
-                        <option value="160">Ryzen 9 7950X / 7900X / 5950X</option>
-                        <option value="150">Ryzen 7 7800X3D / 5800X3D</option>
-                        <option value="130">Ryzen 7 7700X / 5800X / 3800X</option>
-                        <option value="110">Ryzen 5 7600X / 5600X</option>
-                        <option value="95">Ryzen 7 2700X / 1700</option>
-                        <option value="70">Ryzen 5 3600 / 2600 / 1600</option>
-                        <option value="50">Ryzen 3 3300X / 3100 / 2200G</option>
+                        <option value="170">Ryzen 9 9950X / 7950X</option>
+                        <option value="160">Ryzen 7 9800X3D / 7800X3D / 5800X3D</option>
+                        <option value="150">Ryzen 9 9900X / 7900X</option>
+                        <option value="140">Ryzen 7 9700X / 7700X / 5900X</option>
+                        <option value="120">Ryzen 5 9600X / 7600X</option>
+                        <option value="110">Ryzen 7 5800X / 5700X</option>
+                        <option value="90">Ryzen 5 5600X / 5600 / Ryzen 7 3700X</option>
+                        <option value="70">Ryzen 5 3600 / Ryzen 7 2700X</option>
+                        <option value="50">Ryzen 5 2600 / 1600</option>
+                        <option value="40">Ryzen 3 3300X / 3100</option>
+                        <option value="30">Ryzen 3 1200 / 3200G</option>
                     </optgroup>
-                    <optgroup label="AMD Ryzen ノートPC向け">
-                        <option value="130">Ryzen 9 7945HX / 7845HX</option>
-                        <option value="100">Ryzen 7 7735HS / 6800H</option>
-                        <option value="85">Ryzen 7 5800H / Ryzen 5 5600H</option>
-                        <option value="70">Ryzen 7 4800H / Ryzen 5 4600H</option>
-                        <option value="55">Ryzen 7 5700U / 4700U</option>
-                        <option value="40">Ryzen 5 5500U / 4500U</option>
+                    <optgroup label="AMD FX / Aシリーズ等 (旧型)">
+                        <option value="30">FX-8350 / FX-8320</option>
+                        <option value="20">FX-6300 / A10-7850K</option>
+                        <option value="15">Athlon / 古いAシリーズ</option>
+                    </optgroup>
+                    <optgroup label="Intel Core Ultra (ノートPC向け最新)">
+                        <option value="150">Core Ultra 9 288V / 185H</option>
+                        <option value="130">Core Ultra 7 258V / 165H / 155H</option>
+                        <option value="110">Core Ultra 5 226V / 135H / 125H</option>
+                    </optgroup>
+                    <optgroup label="ノートPC向け CPU (Intel Core / AMD Ryzen)">
+                        <option value="130">Core i9-13900H / Ryzen 9 7945HX</option>
+                        <option value="110">Core i7-12700H / Ryzen 7 6800H</option>
+                        <option value="90">Core i7-11800H / Ryzen 7 5800H</option>
+                        <option value="75">Core i7-10875H / Ryzen 5 5600H</option>
+                        <option value="55">Core i7-9750H / Ryzen 7 4700U</option>
+                        <option value="40">Core i5-9300H / Ryzen 5 4500U</option>
+                        <option value="25">Core i5-8250U / 7200U 以前</option>
                     </optgroup>
                 </select>
             </div>
 
             <label>GPU (グラフィックボード)</label>
             <div class="search-select-group">
-                <input type="text" placeholder="🔍 型番で検索 (例: 3060, 4070)" oninput="searchSelect(this, 'my-gpu')">
+                <input type="text" placeholder="🔍 検索 (例: 5090, 4070, RX 7700)" oninput="searchSelect(this, 'my-gpu')">
                 <select id="my-gpu">
-                    <optgroup label="NVIDIA RTX 40 / 30シリーズ (最新・ハイエンド)">
+                    <optgroup label="NVIDIA RTX 50シリーズ (最新世代)">
+                        <option value="250">RTX 5090 (最強クラス)</option>
+                        <option value="200">RTX 5080</option>
+                        <option value="170">RTX 5070 Ti</option>
+                        <option value="150">RTX 5070</option>
+                        <option value="120">RTX 5060</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA RTX 40 / 30シリーズ">
                         <option value="200">RTX 4090</option>
                         <option value="170">RTX 4080 Super / 4080</option>
                         <option value="150">RTX 4070 Ti Super / 4070 Ti / 3090 Ti</option>
@@ -346,6 +359,19 @@
                         <option value="80" selected>RTX 3060</option>
                         <option value="60">RTX 3050</option>
                     </optgroup>
+                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ">
+                        <option value="170">RX 7900 XTX / 7900 XT</option>
+                        <option value="160">RX 6950 XT / 6900 XT</option>
+                        <option value="140">RX 7900 GRE</option>
+                        <option value="130">RX 7800 XT / 6800 XT</option>
+                        <option value="110">RX 6750 XT / 6700 XT</option>
+                        <option value="100">RX 7700 XT</option>
+                        <option value="90">RX 7600 XT / 7600</option>
+                        <option value="80">RX 6650 XT / 6600 XT</option>
+                        <option value="70">RX 6600</option>
+                        <option value="50">RX 6500 XT</option>
+                        <option value="35">RX 6400</option>
+                    </optgroup>
                     <optgroup label="NVIDIA RTX 20 / GTX 16シリーズ">
                         <option value="105">RTX 2080 Ti</option>
                         <option value="90">RTX 2080 Super / 2080</option>
@@ -356,6 +382,15 @@
                         <option value="45">GTX 1660</option>
                         <option value="35">GTX 1650 Super / 1650</option>
                     </optgroup>
+                    <optgroup label="AMD Radeon RX 5000 / RX 500 / 400 等 (旧型)">
+                        <option value="80">RX 5700 XT / Radeon VII</option>
+                        <option value="70">RX 5700 / RX Vega 64</option>
+                        <option value="60">RX 5600 XT / RX Vega 56</option>
+                        <option value="45">RX 580 / RX 570 / RX 480</option>
+                        <option value="35">RX 5500 XT / RX 470</option>
+                        <option value="30">RX 560 / RX 460</option>
+                        <option value="20">RX 550 / R7 250</option>
+                    </optgroup>
                     <optgroup label="NVIDIA GTX 10 / 900 / 700シリーズ (旧型)">
                         <option value="80">GTX 1080 Ti</option>
                         <option value="70">GTX 1080</option>
@@ -365,40 +400,17 @@
                         <option value="40">GTX 1060 (3GB) / GTX 970</option>
                         <option value="30">GTX 1050 Ti / GTX 960</option>
                         <option value="25">GTX 1050 / GTX 950</option>
-                        <option value="20">GTX 750 Ti / GTX 760</option>
+                        <option value="20">GTX 750 Ti / GT 1030 / GTX 760</option>
                     </optgroup>
-                    <optgroup label="NVIDIA ノートPC向け (Laptop GPU)">
-                        <option value="150">RTX 4090 Laptop</option>
-                        <option value="130">RTX 4080 Laptop</option>
-                        <option value="100">RTX 4070 Laptop / 3080 Laptop</option>
-                        <option value="85">RTX 4060 Laptop / 3070 Laptop</option>
-                        <option value="70">RTX 3060 Laptop / 4050 Laptop</option>
+                    <optgroup label="ノートPC向け (Laptop GPU / 統合グラフィックス)">
+                        <option value="180">RTX 5090 Laptop / 4090 Laptop</option>
+                        <option value="140">RTX 5080 Laptop / 4080 Laptop</option>
+                        <option value="110">RTX 5070 Laptop / 4070 Laptop</option>
+                        <option value="85">RTX 5060 Laptop / 4060 Laptop</option>
+                        <option value="70">RTX 3060 Laptop / RX 6600S</option>
                         <option value="45">RTX 3050 Laptop / 2060 Laptop</option>
-                        <option value="35">GTX 1650 Laptop</option>
-                    </optgroup>
-                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ">
-                        <option value="170">RX 7900 XTX / 7900 XT</option>
-                        <option value="130">RX 7800 XT / 6800 XT</option>
-                        <option value="100">RX 7700 XT / 6700 XT</option>
-                        <option value="80">RX 7600 / 6600 XT</option>
-                        <option value="70">RX 6600</option>
-                    </optgroup>
-                    <optgroup label="AMD Radeon 旧型 (RX 5000 / 500 等)">
-                        <option value="80">RX 5700 XT</option>
-                        <option value="70">RX 5700</option>
-                        <option value="60">RX 5600 XT</option>
-                        <option value="45">RX 580 / RX 570</option>
-                        <option value="35">RX 5500 XT / RX 470</option>
-                        <option value="30">RX 560</option>
-                    </optgroup>
-                    <optgroup label="Intel Arc シリーズ (デスクトップ)">
-                        <option value="85">Arc A770</option>
-                        <option value="75">Arc A750</option>
-                        <option value="35">Arc A380</option>
-                    </optgroup>
-                    <optgroup label="グラボなし（内蔵GPU）">
-                        <option value="35">Radeon 780M / 680M (高性能内蔵)</option>
-                        <option value="20">Intel Iris Xe / Radeon Graphics</option>
+                        <option value="35">GTX 1650 Laptop / Radeon 780M / 890M</option>
+                        <option value="20">Intel Arc Graphics (Ultra内蔵) / Iris Xe</option>
                         <option value="10">Intel UHD Graphics</option>
                     </optgroup>
                 </select>
@@ -426,18 +438,67 @@
                 <button class="preset-btn" onclick="loadPreset('cyberpunk')">サイバーパンク<br>(重い)</button>
             </div>
 
+            <!-- 要求スペックも「自分のPC」と全く同じ詳細リストを使用 -->
             <label>推奨 CPU</label>
             <div class="search-select-group">
                 <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-cpu')">
                 <select id="game-cpu">
-                    <option value="140">Core i7-13700 / Ryzen 7 7800X (最新ハイエンド要求)</option>
-                    <option value="110">Core i7-12700 / Ryzen 7 5800X</option>
-                    <option value="90">Core i5-12400 / Ryzen 5 5600X</option>
-                    <option value="70">Core i7-9700 / Ryzen 5 3600 / Core i3-12100</option>
-                    <option value="50">Core i7-7700 / Ryzen 5 2600 / Core i3-10100</option>
-                    <option value="40">Core i5-8400 / Ryzen 3 3300X</option>
-                    <option value="30">Core i5-6500 / 古いCore i5</option>
-                    <option value="20" selected>Core i3 (古い世代) / Pentium等</option>
+                    <optgroup label="Intel Core Ultra (最新デスクトップ)">
+                        <option value="170">Core Ultra 9 285K</option>
+                        <option value="150">Core Ultra 7 265K</option>
+                        <option value="130">Core Ultra 5 245K</option>
+                    </optgroup>
+                    <optgroup label="Intel Core (i9 / i7 / i5)">
+                        <option value="160">Core i9-14900K / 13900K / 12900K</option>
+                        <option value="140">Core i7-14700K / 13700K</option>
+                        <option value="120">Core i5-14600K / 13600K</option>
+                        <option value="110">Core i7-12700 / 11700 / 10700</option>
+                        <option value="100">Core i5-14400 / 13400</option>
+                        <option value="90">Core i5-12400</option>
+                        <option value="75">Core i5-11400 / 10400</option>
+                        <option value="70">Core i7-9700 / 8700</option>
+                        <option value="50">Core i7-7700 / 6700 / 4770</option>
+                        <option value="40">Core i5-9400 / 8400 / 7500</option>
+                    </optgroup>
+                    <optgroup label="Intel Core i3 / Pentium / Celeron">
+                        <option value="70">Core i3-14100 / 13100 / 12100</option>
+                        <option value="50">Core i3-10100 / 9100</option>
+                        <option value="30" selected>Core i5-6500 / 4570 / i3-8100</option>
+                        <option value="20">Core i3 (旧型) / Pentium Gold</option>
+                        <option value="15">Celeron / Atom</option>
+                    </optgroup>
+                    <optgroup label="AMD Ryzen デスクトップ">
+                        <option value="170">Ryzen 9 9950X / 7950X</option>
+                        <option value="160">Ryzen 7 9800X3D / 7800X3D / 5800X3D</option>
+                        <option value="150">Ryzen 9 9900X / 7900X</option>
+                        <option value="140">Ryzen 7 9700X / 7700X / 5900X</option>
+                        <option value="120">Ryzen 5 9600X / 7600X</option>
+                        <option value="110">Ryzen 7 5800X / 5700X</option>
+                        <option value="90">Ryzen 5 5600X / 5600 / Ryzen 7 3700X</option>
+                        <option value="70">Ryzen 5 3600 / Ryzen 7 2700X</option>
+                        <option value="50">Ryzen 5 2600 / 1600</option>
+                        <option value="40">Ryzen 3 3300X / 3100</option>
+                        <option value="30">Ryzen 3 1200 / 3200G</option>
+                    </optgroup>
+                    <optgroup label="AMD FX / Aシリーズ等 (旧型)">
+                        <option value="30">FX-8350 / FX-8320</option>
+                        <option value="20">FX-6300 / A10-7850K</option>
+                        <option value="15">Athlon / 古いAシリーズ</option>
+                    </optgroup>
+                    <optgroup label="Intel Core Ultra (ノートPC向け最新)">
+                        <option value="150">Core Ultra 9 288V / 185H</option>
+                        <option value="130">Core Ultra 7 258V / 165H / 155H</option>
+                        <option value="110">Core Ultra 5 226V / 135H / 125H</option>
+                    </optgroup>
+                    <optgroup label="ノートPC向け CPU (Intel Core / AMD Ryzen)">
+                        <option value="130">Core i9-13900H / Ryzen 9 7945HX</option>
+                        <option value="110">Core i7-12700H / Ryzen 7 6800H</option>
+                        <option value="90">Core i7-11800H / Ryzen 7 5800H</option>
+                        <option value="75">Core i7-10875H / Ryzen 5 5600H</option>
+                        <option value="55">Core i7-9750H / Ryzen 7 4700U</option>
+                        <option value="40">Core i5-9300H / Ryzen 5 4500U</option>
+                        <option value="25">Core i5-8250U / 7200U 以前</option>
+                    </optgroup>
                 </select>
             </div>
 
@@ -445,15 +506,79 @@
             <div class="search-select-group">
                 <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-gpu')">
                 <select id="game-gpu">
-                    <option value="170">RTX 4080 / RX 7900 XTX</option>
-                    <option value="130">RTX 4070 / RTX 3080</option>
-                    <option value="110">RTX 3070 / RX 6700 XT</option>
-                    <option value="90">RTX 4060 / RTX 2080</option>
-                    <option value="80">RTX 3060 / RX 6600 XT</option>
-                    <option value="60">GTX 1660 Super / GTX 1070</option>
-                    <option value="45">GTX 1060 (6GB) / RX 580</option>
-                    <option value="30" selected>GTX 1050 Ti / RX 560</option>
-                    <option value="10">内蔵GPUでも可</option>
+                    <optgroup label="NVIDIA RTX 50シリーズ (最新世代)">
+                        <option value="250">RTX 5090 (最強クラス)</option>
+                        <option value="200">RTX 5080</option>
+                        <option value="170">RTX 5070 Ti</option>
+                        <option value="150">RTX 5070</option>
+                        <option value="120">RTX 5060</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA RTX 40 / 30シリーズ">
+                        <option value="200">RTX 4090</option>
+                        <option value="170">RTX 4080 Super / 4080</option>
+                        <option value="150">RTX 4070 Ti Super / 4070 Ti / 3090 Ti</option>
+                        <option value="130">RTX 4070 Super / 4070 / 3090 / 3080 Ti</option>
+                        <option value="120">RTX 3080</option>
+                        <option value="110">RTX 4060 Ti / 3070 Ti / 3070</option>
+                        <option value="100">RTX 3060 Ti</option>
+                        <option value="90">RTX 4060</option>
+                        <option value="80">RTX 3060</option>
+                        <option value="60">RTX 3050</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ">
+                        <option value="170">RX 7900 XTX / 7900 XT</option>
+                        <option value="160">RX 6950 XT / 6900 XT</option>
+                        <option value="140">RX 7900 GRE</option>
+                        <option value="130">RX 7800 XT / 6800 XT</option>
+                        <option value="110">RX 6750 XT / 6700 XT</option>
+                        <option value="100">RX 7700 XT</option>
+                        <option value="90">RX 7600 XT / 7600</option>
+                        <option value="80">RX 6650 XT / 6600 XT</option>
+                        <option value="70">RX 6600</option>
+                        <option value="50">RX 6500 XT</option>
+                        <option value="35">RX 6400</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA RTX 20 / GTX 16シリーズ">
+                        <option value="105">RTX 2080 Ti</option>
+                        <option value="90">RTX 2080 Super / 2080</option>
+                        <option value="80">RTX 2070 Super / 2070</option>
+                        <option value="70">RTX 2060 Super</option>
+                        <option value="60">RTX 2060</option>
+                        <option value="55">GTX 1660 Ti / 1660 Super</option>
+                        <option value="45">GTX 1660</option>
+                        <option value="35">GTX 1650 Super / 1650</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon RX 5000 / RX 500 / 400 等 (旧型)">
+                        <option value="80">RX 5700 XT / Radeon VII</option>
+                        <option value="70">RX 5700 / RX Vega 64</option>
+                        <option value="60">RX 5600 XT / RX Vega 56</option>
+                        <option value="45">RX 580 / RX 570 / RX 480</option>
+                        <option value="35">RX 5500 XT / RX 470</option>
+                        <option value="30">RX 560 / RX 460</option>
+                        <option value="20">RX 550 / R7 250</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA GTX 10 / 900 / 700シリーズ (旧型)">
+                        <option value="80">GTX 1080 Ti</option>
+                        <option value="70">GTX 1080</option>
+                        <option value="60">GTX 1070 Ti</option>
+                        <option value="55">GTX 1070 / GTX 980 Ti</option>
+                        <option value="45">GTX 1060 (6GB) / GTX 980</option>
+                        <option value="40">GTX 1060 (3GB) / GTX 970</option>
+                        <option value="30" selected>GTX 1050 Ti / GTX 960</option>
+                        <option value="25">GTX 1050 / GTX 950</option>
+                        <option value="20">GTX 750 Ti / GT 1030 / GTX 760</option>
+                    </optgroup>
+                    <optgroup label="ノートPC向け (Laptop GPU / 統合グラフィックス)">
+                        <option value="180">RTX 5090 Laptop / 4090 Laptop</option>
+                        <option value="140">RTX 5080 Laptop / 4080 Laptop</option>
+                        <option value="110">RTX 5070 Laptop / 4070 Laptop</option>
+                        <option value="85">RTX 5060 Laptop / 4060 Laptop</option>
+                        <option value="70">RTX 3060 Laptop / RX 6600S</option>
+                        <option value="45">RTX 3050 Laptop / 2060 Laptop</option>
+                        <option value="35">GTX 1650 Laptop / Radeon 780M / 890M</option>
+                        <option value="20">Intel Arc Graphics (Ultra内蔵) / Iris Xe</option>
+                        <option value="10">Intel UHD Graphics</option>
+                    </optgroup>
                 </select>
             </div>
 
@@ -584,33 +709,23 @@
         detailsHtml += evaluatePart('メモリ', myRam, myRam, gameRamRec, ramMinThreshold, true);
 
         // ====== 📊 FPS 推計ロジック ======
-        
-        // 1. ボトルネック(足枷)になっているパーツの比率を出す
-        // 要求スペックに対して何倍の性能があるか (例: 要求スコア60で、自分のGPUが120なら2倍)
-        const gpuRatio = myGpu / Math.max(10, gameGpuRec); // 0割回避
+        const gpuRatio = myGpu / Math.max(10, gameGpuRec); 
         const cpuRatio = myCpu / Math.max(10, gameCpuRec);
         const bottleneckRatio = Math.min(gpuRatio, cpuRatio);
 
-        // 2. メモリ不足によるペナルティ
         let ramPenalty = 1.0;
-        if (myRam < gameRamRec) ramPenalty = 0.8; // 推奨未満なら-20%
-        if (myRam < ramMinThreshold) ramPenalty = 0.5; // 最低未満なら激減
+        if (myRam < gameRamRec) ramPenalty = 0.8;
+        if (myRam < ramMinThreshold) ramPenalty = 0.5;
 
-        // 3. ゲームの重さによるベースFPS補正
-        // 軽いゲーム（要求スコア45以下）はFPSが出やすいため倍率を上げる
         const isLightGame = gameGpuRec <= 45;
         const gameWeight = isLightGame ? 1.6 : 1.0; 
 
-        // 4. ベースFPSの算出 (要求ピッタリなら高設定で60FPSを基準とする)
-        // Math.pow(x, 0.8) をかけて、ハイスペック時の数値がインフレしすぎないようにする
         let baseHighFps = 60 * Math.pow(bottleneckRatio, 0.8) * gameWeight * ramPenalty;
         
-        // 5. 各画質設定でのFPS割り出し
         let fpsHigh = Math.max(1, Math.floor(baseHighFps));
         let fpsMid = Math.max(1, Math.floor(baseHighFps * 1.5));
         let fpsLow = Math.max(1, Math.floor(baseHighFps * 2.3));
 
-        // 999以上の非現実的な数値をカンストさせる
         fpsHigh = fpsHigh > 999 ? 999 : fpsHigh;
         fpsMid = fpsMid > 999 ? 999 : fpsMid;
         fpsLow = fpsLow > 999 ? 999 : fpsLow;
@@ -659,7 +774,6 @@
             </div>
         `;
         
-        // スムーズスクロール
         resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 </script>
