@@ -383,7 +383,7 @@
 
             <label>GPU (グラフィックボード)</label>
             <div class="search-select-group">
-                <input type="text" placeholder="🔍 検索 (例: 2GB, 5090, 4070)" oninput="searchSelect(this, 'my-gpu')">
+                <input type="text" placeholder="🔍 検索 (例: 2GB, 5090, 2070 Super, Max-Q)" oninput="searchSelect(this, 'my-gpu')">
                 <select id="my-gpu">
                     <optgroup label="VRAM (ビデオメモリ) 容量での表記">
                         <option value="130">16GB VRAM 以上</option>
@@ -394,14 +394,14 @@
                         <option value="25">2GB VRAM / 3GB VRAM</option>
                         <option value="15">1GB VRAM 以下</option>
                     </optgroup>
-                    <optgroup label="NVIDIA RTX 50シリーズ (最新世代)">
+                    <optgroup label="NVIDIA RTX 50シリーズ (デスクトップ)">
                         <option value="250">RTX 5090</option>
                         <option value="200">RTX 5080</option>
                         <option value="170">RTX 5070 Ti</option>
                         <option value="150">RTX 5070</option>
                         <option value="120">RTX 5060</option>
                     </optgroup>
-                    <optgroup label="NVIDIA RTX 40 / 30シリーズ">
+                    <optgroup label="NVIDIA RTX 40 / 30シリーズ (デスクトップ)">
                         <option value="200">RTX 4090</option>
                         <option value="170">RTX 4080 Super / 4080</option>
                         <option value="150">RTX 4070 Ti Super / 4070 Ti / 3090 Ti</option>
@@ -413,7 +413,37 @@
                         <option value="80" selected>RTX 3060</option>
                         <option value="60">RTX 3050</option>
                     </optgroup>
-                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ">
+                    <optgroup label="NVIDIA RTX 50 / 40 / 30シリーズ (ノートPC向け)">
+                        <option value="180">RTX 5090 Laptop / 4090 Laptop</option>
+                        <option value="140">RTX 5080 Laptop / 4080 Laptop</option>
+                        <option value="110">RTX 5070 Laptop / 4070 Laptop / 3080 Ti Laptop</option>
+                        <option value="100">RTX 3080 Laptop</option>
+                        <option value="85">RTX 5060 Laptop / 4060 Laptop / 3070 Ti Laptop</option>
+                        <option value="75">RTX 3070 Laptop (Max-Q含む)</option>
+                        <option value="70">RTX 3060 Laptop / 4050 Laptop</option>
+                        <option value="55">RTX 3050 Ti Laptop</option>
+                        <option value="45">RTX 3050 Laptop</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA RTX 20 / GTXシリーズ (ノート・Max-Q)">
+                        <option value="85">RTX 2080 Super (Max-Q含む) Laptop</option>
+                        <option value="80">RTX 2080 (Max-Q含む) Laptop</option>
+                        <option value="75">RTX 2070 Super (Max-Q含む) Laptop</option>
+                        <option value="70">RTX 2070 (Max-Q含む) Laptop</option>
+                        <option value="65">RTX 2060 Super Laptop</option>
+                        <option value="60">RTX 2060 (Max-Q含む) / GTX 1070 Laptop</option>
+                        <option value="50">GTX 1660 Ti (Max-Q含む) Laptop</option>
+                        <option value="45">GTX 1060 Laptop</option>
+                        <option value="40">GTX 1650 Ti (Max-Q含む) Laptop</option>
+                        <option value="35">GTX 1650 (Max-Q含む) Laptop</option>
+                        <option value="30">GTX 1050 Ti Laptop</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon ノートPC向け (M / Sシリーズ)">
+                        <option value="110">RX 6850M XT / 6800M</option>
+                        <option value="90">RX 7600M XT / 6700M / 6700S</option>
+                        <option value="70">RX 7600S / 6600M / 6600S</option>
+                        <option value="50">RX 6500M / 5600M</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ (デスクトップ)">
                         <option value="170">RX 7900 XTX / 7900 XT</option>
                         <option value="160">RX 6950 XT / 6900 XT</option>
                         <option value="140">RX 7900 GRE</option>
@@ -426,7 +456,7 @@
                         <option value="50">RX 6500 XT</option>
                         <option value="35">RX 6400</option>
                     </optgroup>
-                    <optgroup label="NVIDIA RTX 20 / GTX 16シリーズ">
+                    <optgroup label="NVIDIA RTX 20 / GTX 16シリーズ (デスクトップ)">
                         <option value="105">RTX 2080 Ti</option>
                         <option value="90">RTX 2080 Super / 2080</option>
                         <option value="80">RTX 2070 Super / 2070</option>
@@ -456,15 +486,9 @@
                         <option value="25">GTX 1050 / GTX 950</option>
                         <option value="20">GTX 750 Ti / GT 1030 / GTX 760</option>
                     </optgroup>
-                    <optgroup label="ノートPC向け (Laptop GPU / 統合グラフィックス)">
-                        <option value="180">RTX 5090 Laptop / 4090 Laptop</option>
-                        <option value="140">RTX 5080 Laptop / 4080 Laptop</option>
-                        <option value="110">RTX 5070 Laptop / 4070 Laptop</option>
-                        <option value="85">RTX 5060 Laptop / 4060 Laptop</option>
-                        <option value="70">RTX 3060 Laptop / RX 6600S</option>
-                        <option value="45">RTX 3050 Laptop / 2060 Laptop</option>
-                        <option value="35">GTX 1650 Laptop / Radeon 780M / 890M</option>
-                        <option value="20">Intel Arc Graphics (Ultra内蔵) / Iris Xe</option>
+                    <optgroup label="統合グラフィックス (内蔵GPU)">
+                        <option value="35">Radeon 780M / 890M (高性能内蔵)</option>
+                        <option value="20">Intel Arc Graphics (Ultra内蔵) / Iris Xe / Radeon Graphics</option>
                         <option value="10">Intel UHD Graphics</option>
                     </optgroup>
                 </select>
@@ -580,14 +604,14 @@
                         <option value="25">2GB VRAM / 3GB VRAM</option>
                         <option value="15">1GB VRAM 以下</option>
                     </optgroup>
-                    <optgroup label="NVIDIA RTX 50シリーズ (最新世代)">
+                    <optgroup label="NVIDIA RTX 50シリーズ (デスクトップ)">
                         <option value="250">RTX 5090 (最強クラス)</option>
                         <option value="200">RTX 5080</option>
                         <option value="170">RTX 5070 Ti</option>
                         <option value="150">RTX 5070</option>
                         <option value="120">RTX 5060</option>
                     </optgroup>
-                    <optgroup label="NVIDIA RTX 40 / 30シリーズ">
+                    <optgroup label="NVIDIA RTX 40 / 30シリーズ (デスクトップ)">
                         <option value="200">RTX 4090</option>
                         <option value="170">RTX 4080 Super / 4080</option>
                         <option value="150">RTX 4070 Ti Super / 4070 Ti / 3090 Ti</option>
@@ -599,7 +623,37 @@
                         <option value="80">RTX 3060</option>
                         <option value="60">RTX 3050</option>
                     </optgroup>
-                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ">
+                    <optgroup label="NVIDIA RTX 50 / 40 / 30シリーズ (ノートPC向け)">
+                        <option value="180">RTX 5090 Laptop / 4090 Laptop</option>
+                        <option value="140">RTX 5080 Laptop / 4080 Laptop</option>
+                        <option value="110">RTX 5070 Laptop / 4070 Laptop / 3080 Ti Laptop</option>
+                        <option value="100">RTX 3080 Laptop</option>
+                        <option value="85">RTX 5060 Laptop / 4060 Laptop / 3070 Ti Laptop</option>
+                        <option value="75">RTX 3070 Laptop (Max-Q含む)</option>
+                        <option value="70">RTX 3060 Laptop / 4050 Laptop</option>
+                        <option value="55">RTX 3050 Ti Laptop</option>
+                        <option value="45">RTX 3050 Laptop</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA RTX 20 / GTXシリーズ (ノート・Max-Q)">
+                        <option value="85">RTX 2080 Super (Max-Q含む) Laptop</option>
+                        <option value="80">RTX 2080 (Max-Q含む) Laptop</option>
+                        <option value="75">RTX 2070 Super (Max-Q含む) Laptop</option>
+                        <option value="70">RTX 2070 (Max-Q含む) Laptop</option>
+                        <option value="65">RTX 2060 Super Laptop</option>
+                        <option value="60">RTX 2060 (Max-Q含む) / GTX 1070 Laptop</option>
+                        <option value="50">GTX 1660 Ti (Max-Q含む) Laptop</option>
+                        <option value="45">GTX 1060 Laptop</option>
+                        <option value="40">GTX 1650 Ti (Max-Q含む) Laptop</option>
+                        <option value="35">GTX 1650 (Max-Q含む) Laptop</option>
+                        <option value="30">GTX 1050 Ti Laptop</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon ノートPC向け (M / Sシリーズ)">
+                        <option value="110">RX 6850M XT / 6800M</option>
+                        <option value="90">RX 7600M XT / 6700M / 6700S</option>
+                        <option value="70">RX 7600S / 6600M / 6600S</option>
+                        <option value="50">RX 6500M / 5600M</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ (デスクトップ)">
                         <option value="170">RX 7900 XTX / 7900 XT</option>
                         <option value="160">RX 6950 XT / 6900 XT</option>
                         <option value="140">RX 7900 GRE</option>
@@ -612,7 +666,7 @@
                         <option value="50">RX 6500 XT</option>
                         <option value="35">RX 6400</option>
                     </optgroup>
-                    <optgroup label="NVIDIA RTX 20 / GTX 16シリーズ">
+                    <optgroup label="NVIDIA RTX 20 / GTX 16シリーズ (デスクトップ)">
                         <option value="105">RTX 2080 Ti</option>
                         <option value="90">RTX 2080 Super / 2080</option>
                         <option value="80">RTX 2070 Super / 2070</option>
@@ -642,15 +696,9 @@
                         <option value="25">GTX 1050 / GTX 950</option>
                         <option value="20">GTX 750 Ti / GT 1030 / GTX 760</option>
                     </optgroup>
-                    <optgroup label="ノートPC向け (Laptop GPU / 統合グラフィックス)">
-                        <option value="180">RTX 5090 Laptop / 4090 Laptop</option>
-                        <option value="140">RTX 5080 Laptop / 4080 Laptop</option>
-                        <option value="110">RTX 5070 Laptop / 4070 Laptop</option>
-                        <option value="85">RTX 5060 Laptop / 4060 Laptop</option>
-                        <option value="70">RTX 3060 Laptop / RX 6600S</option>
-                        <option value="45">RTX 3050 Laptop / 2060 Laptop</option>
-                        <option value="35">GTX 1650 Laptop / Radeon 780M / 890M</option>
-                        <option value="20">Intel Arc Graphics (Ultra内蔵) / Iris Xe</option>
+                    <optgroup label="統合グラフィックス (内蔵GPU)">
+                        <option value="35">Radeon 780M / 890M (高性能内蔵)</option>
+                        <option value="20">Intel Arc Graphics (Ultra内蔵) / Iris Xe / Radeon Graphics</option>
                         <option value="10">Intel UHD Graphics</option>
                     </optgroup>
                 </select>
@@ -825,7 +873,7 @@
         resultTitle.className = 'result-title'; 
         
         let statusEmojiText = "";
-        let statusShortText = ""; // X制約回避用の短い判定テキスト
+        let statusShortText = ""; 
         if (status === 2) {
             statusEmojiText = "🎉 高設定で快適にプレイ可能です！";
             statusShortText = "🎉 高設定で快適！";
