@@ -275,8 +275,14 @@
             
             <label>CPU (プロセッサ)</label>
             <div class="search-select-group">
-                <input type="text" placeholder="🔍 検索 (例: 285K, Ultra 7, 5600X)" oninput="searchSelect(this, 'my-cpu')">
+                <input type="text" placeholder="🔍 検索 (例: 285K, Ultra 7, Quad, 4コア)" oninput="searchSelect(this, 'my-cpu')">
                 <select id="my-cpu">
+                    <optgroup label="コア数での大まかな表記 (Dual / Quad等)">
+                        <option value="110">8コア / Octa Core プロセッサ (オクタコア)</option>
+                        <option value="90">6コア / Hexa Core プロセッサ (ヘキサコア)</option>
+                        <option value="50">4コア / Quad Core プロセッサ (クアッドコア)</option>
+                        <option value="20">2コア / Dual Core プロセッサ (デュアルコア)</option>
+                    </optgroup>
                     <optgroup label="Intel Core Ultra (最新デスクトップ)">
                         <option value="170">Core Ultra 9 285K</option>
                         <option value="150">Core Ultra 7 265K</option>
@@ -443,6 +449,12 @@
             <div class="search-select-group">
                 <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-cpu')">
                 <select id="game-cpu">
+                    <optgroup label="コア数での大まかな表記 (Dual / Quad等)">
+                        <option value="110">8コア / Octa Core プロセッサ (オクタコア)</option>
+                        <option value="90">6コア / Hexa Core プロセッサ (ヘキサコア)</option>
+                        <option value="50">4コア / Quad Core プロセッサ (クアッドコア)</option>
+                        <option value="20">2コア / Dual Core プロセッサ (デュアルコア)</option>
+                    </optgroup>
                     <optgroup label="Intel Core Ultra (最新デスクトップ)">
                         <option value="170">Core Ultra 9 285K</option>
                         <option value="150">Core Ultra 7 265K</option>
@@ -611,8 +623,11 @@
         if (!text) return;
 
         const options = Array.from(selectElem.options);
+        
+        // Quad, Dualなどの英語のキーワード対応（大文字小文字を区別せず検索）
         let matches = options.filter(opt => opt.text.toLowerCase().includes(text));
         
+        // 半角英数字の型番検索対応（例: "3060"）
         if (matches.length === 0) {
             const numbers = text.match(/\d{3,5}/g); 
             if (numbers) {
