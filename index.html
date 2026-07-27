@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCゲーム 詳細スペックチェッカー</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+
+        .search-select-group {
+            display: flex;
+            flex-direction: column;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 5px;
+        }
+        
+        .search-select-group input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            border: 1px solid #cbd5e1;
+            border-bottom: 1px dashed #cbd5e1;
+            border-radius: 6px 6px 0 0;
+            background-color: #f8fafc;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+        
+        .search-select-group select {
+            width: 100%;
+            padding: 12px 10px;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e1;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            background-color: #fff;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        
+        .search-select-group input:focus {
+            background-color: #fff;
+            border: 1px solid var(--primary);
+            border-bottom: 1px dashed var(--primary);
+            outline: none;
+        }
+
+        select optgroup {
+            font-weight: bold;
+            background: #fff;
+            color: var(--primary);
+        }
+
+        select option {
+            font-weight: normal;
+            color: var(--text-main);
+        }
+
+        .normal-select {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: #fff;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        button.btn-check {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin: 25px 0;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+        }
+
+        button.btn-check:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .result-box {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: none;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .status-ok { background-color: #d1fae5; color: #065f46; border: 1px solid #34d399; }
+        .status-warn { background-color: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }
+        .status-bad { background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
+
+        .detail-item {
+            margin: 12px 0;
+            padding: 12px 15px;
+            border-left: 5px solid #ccc;
+            background: #f9fafb;
+            border-radius: 0 6px 6px 0;
+            line-height: 1.5;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            flex: 1;
+            padding: 10px 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 1px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 6px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        
+        .preset-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* FPS表示用スタイル */
+        .fps-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #cbd5e1;
+        }
+        .fps-section h3 {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 0;
+            color: #1f2937;
+        }
+        .fps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .fps-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .fps-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .fps-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+        .fps-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 15px;
+        }
+        @media (max-width: 600px) {
+            .fps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎮 PCゲーム 詳細スペックチェッカー</h1>
+    <p class="subtitle">あなたが見込めるFPS（フレームレート）も自動算出して判定します</p>
+
+    <div class="grid">
+        <!-- 自分のPCスペック -->
+        <div class="card">
+            <h2>💻 あなたのPC</h2>
+            
+            <label>CPU (プロセッサ)</label>
+            <div class="search-select-group">
+                <input type="text" placeholder="🔍 型番で検索 (例: 12400, 5600X)" oninput="searchSelect(this, 'my-cpu')">
+                <select id="my-cpu">
+                    <optgroup label="Intel デスクトップ ハイエンド (i9 / i7)">
+                        <option value="160">Core i9-14900K / 13900K / 12900K</option>
+                        <option value="140">Core i7-14700K / 13700K</option>
+                        <option value="110">Core i7-12700 / 11700 / 10700</option>
+                        <option value="85">Core i7-9700 / 8700</option>
+                        <option value="60">Core i7-7700 / 6700 / 4770</option>
+                    </optgroup>
+                    <optgroup label="Intel デスクトップ ミドル/エントリー">
+                        <option value="120">Core i5-14600K / 13600K</option>
+                        <option value="100">Core i5-14400 / 13400 / 12400</option>
+                        <option value="75">Core i5-11400 / 10400 / 11500</option>
+                        <option value="70">Core i3-14100 / 13100 / 12100</option>
+                        <option value="55">Core i5-9400 / 8400</option>
+                        <option value="50">Core i3-10100 / 9100 / 8100</option>
+                        <option value="40">Core i5-7500 / 6500 / 4570</option>
+                        <option value="35">Core i3-7100 / 6100 以前</option>
+                        <option value="25">Pentium Gold (G6400 等)</option>
+                        <option value="15">Celeron / Atom</option>
+                    </optgroup>
+                    <optgroup label="Intel ノートPC向け (H / HXシリーズ等)">
+                        <option value="130">Core i9-13900H / i7-13700H (第13世代ノート用)</option>
+                        <option value="110">Core i9-12900H / i7-12700H (第12世代ノート用)</option>
+                        <option value="90">Core i7-11800H / i5-12500H</option>
+                        <option value="75">Core i7-10875H / 10750H / i5-11400H</option>
+                        <option value="55">Core i7-9750H / 8750H / i5-10300H</option>
+                        <option value="40">Core i5-9300H / 8300H</option>
+                    </optgroup>
+                    <optgroup label="Intel ノートPC向け 薄型省電力 (U / Pシリーズ)">
+                        <option value="75">Core i7-1360P / 1260P</option>
+                        <option value="50">Core i7-1165G7 / i5-1135G7</option>
+                        <option value="35">Core i7-10510U / 8565U / i5-10210U</option>
+                        <option value="25">Core i5-8250U / 7200U 以前</option>
+                    </optgroup>
+                    <optgroup label="AMD Ryzen デスクトップ">
+                        <option value="160">Ryzen 9 7950X / 7900X / 5950X</option>
+                        <option value="150">Ryzen 7 7800X3D / 5800X3D</option>
+                        <option value="130">Ryzen 7 7700X / 5800X / 3800X</option>
+                        <option value="110">Ryzen 5 7600X / 5600X</option>
+                        <option value="95">Ryzen 7 2700X / 1700</option>
+                        <option value="70">Ryzen 5 3600 / 2600 / 1600</option>
+                        <option value="50">Ryzen 3 3300X / 3100 / 2200G</option>
+                    </optgroup>
+                    <optgroup label="AMD Ryzen ノートPC向け">
+                        <option value="130">Ryzen 9 7945HX / 7845HX</option>
+                        <option value="100">Ryzen 7 7735HS / 6800H</option>
+                        <option value="85">Ryzen 7 5800H / Ryzen 5 5600H</option>
+                        <option value="70">Ryzen 7 4800H / Ryzen 5 4600H</option>
+                        <option value="55">Ryzen 7 5700U / 4700U</option>
+                        <option value="40">Ryzen 5 5500U / 4500U</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <label>GPU (グラフィックボード)</label>
+            <div class="search-select-group">
+                <input type="text" placeholder="🔍 型番で検索 (例: 3060, 4070)" oninput="searchSelect(this, 'my-gpu')">
+                <select id="my-gpu">
+                    <optgroup label="NVIDIA RTX 40 / 30シリーズ (最新・ハイエンド)">
+                        <option value="200">RTX 4090</option>
+                        <option value="170">RTX 4080 Super / 4080</option>
+                        <option value="150">RTX 4070 Ti Super / 4070 Ti / 3090 Ti</option>
+                        <option value="130">RTX 4070 Super / 4070 / 3090 / 3080 Ti</option>
+                        <option value="120">RTX 3080</option>
+                        <option value="110">RTX 4060 Ti / 3070 Ti / 3070</option>
+                        <option value="100">RTX 3060 Ti</option>
+                        <option value="90">RTX 4060</option>
+                        <option value="80" selected>RTX 3060</option>
+                        <option value="60">RTX 3050</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA RTX 20 / GTX 16シリーズ">
+                        <option value="105">RTX 2080 Ti</option>
+                        <option value="90">RTX 2080 Super / 2080</option>
+                        <option value="80">RTX 2070 Super / 2070</option>
+                        <option value="70">RTX 2060 Super</option>
+                        <option value="60">RTX 2060</option>
+                        <option value="55">GTX 1660 Ti / 1660 Super</option>
+                        <option value="45">GTX 1660</option>
+                        <option value="35">GTX 1650 Super / 1650</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA GTX 10 / 900 / 700シリーズ (旧型)">
+                        <option value="80">GTX 1080 Ti</option>
+                        <option value="70">GTX 1080</option>
+                        <option value="60">GTX 1070 Ti</option>
+                        <option value="55">GTX 1070 / GTX 980 Ti</option>
+                        <option value="45">GTX 1060 (6GB) / GTX 980</option>
+                        <option value="40">GTX 1060 (3GB) / GTX 970</option>
+                        <option value="30">GTX 1050 Ti / GTX 960</option>
+                        <option value="25">GTX 1050 / GTX 950</option>
+                        <option value="20">GTX 750 Ti / GTX 760</option>
+                    </optgroup>
+                    <optgroup label="NVIDIA ノートPC向け (Laptop GPU)">
+                        <option value="150">RTX 4090 Laptop</option>
+                        <option value="130">RTX 4080 Laptop</option>
+                        <option value="100">RTX 4070 Laptop / 3080 Laptop</option>
+                        <option value="85">RTX 4060 Laptop / 3070 Laptop</option>
+                        <option value="70">RTX 3060 Laptop / 4050 Laptop</option>
+                        <option value="45">RTX 3050 Laptop / 2060 Laptop</option>
+                        <option value="35">GTX 1650 Laptop</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon RX 7000 / 6000シリーズ">
+                        <option value="170">RX 7900 XTX / 7900 XT</option>
+                        <option value="130">RX 7800 XT / 6800 XT</option>
+                        <option value="100">RX 7700 XT / 6700 XT</option>
+                        <option value="80">RX 7600 / 6600 XT</option>
+                        <option value="70">RX 6600</option>
+                    </optgroup>
+                    <optgroup label="AMD Radeon 旧型 (RX 5000 / 500 等)">
+                        <option value="80">RX 5700 XT</option>
+                        <option value="70">RX 5700</option>
+                        <option value="60">RX 5600 XT</option>
+                        <option value="45">RX 580 / RX 570</option>
+                        <option value="35">RX 5500 XT / RX 470</option>
+                        <option value="30">RX 560</option>
+                    </optgroup>
+                    <optgroup label="Intel Arc シリーズ (デスクトップ)">
+                        <option value="85">Arc A770</option>
+                        <option value="75">Arc A750</option>
+                        <option value="35">Arc A380</option>
+                    </optgroup>
+                    <optgroup label="グラボなし（内蔵GPU）">
+                        <option value="35">Radeon 780M / 680M (高性能内蔵)</option>
+                        <option value="20">Intel Iris Xe / Radeon Graphics</option>
+                        <option value="10">Intel UHD Graphics</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <label>メモリ (RAM)</label>
+            <select id="my-ram" class="normal-select">
+                <option value="64">64 GB 以上</option>
+                <option value="32">32 GB</option>
+                <option value="24">24 GB</option>
+                <option value="16" selected>16 GB (ゲーミング標準)</option>
+                <option value="12">12 GB</option>
+                <option value="8">8 GB</option>
+                <option value="4">4 GB 以下</option>
+            </select>
+        </div>
+
+        <!-- ゲームの要求スペック -->
+        <div class="card">
+            <h2>🕹️ ゲームの要求スペック(推奨)</h2>
+            
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="loadPreset('valorant')">Valorant<br>(軽い)</button>
+                <button class="preset-btn" onclick="loadPreset('apex')">Apex Legends<br>(中くらい)</button>
+                <button class="preset-btn" onclick="loadPreset('cyberpunk')">サイバーパンク<br>(重い)</button>
+            </div>
+
+            <label>推奨 CPU</label>
+            <div class="search-select-group">
+                <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-cpu')">
+                <select id="game-cpu">
+                    <option value="140">Core i7-13700 / Ryzen 7 7800X (最新ハイエンド要求)</option>
+                    <option value="110">Core i7-12700 / Ryzen 7 5800X</option>
+                    <option value="90">Core i5-12400 / Ryzen 5 5600X</option>
+                    <option value="70">Core i7-9700 / Ryzen 5 3600 / Core i3-12100</option>
+                    <option value="50">Core i7-7700 / Ryzen 5 2600 / Core i3-10100</option>
+                    <option value="40">Core i5-8400 / Ryzen 3 3300X</option>
+                    <option value="30">Core i5-6500 / 古いCore i5</option>
+                    <option value="20" selected>Core i3 (古い世代) / Pentium等</option>
+                </select>
+            </div>
+
+            <label>推奨 GPU</label>
+            <div class="search-select-group">
+                <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-gpu')">
+                <select id="game-gpu">
+                    <option value="170">RTX 4080 / RX 7900 XTX</option>
+                    <option value="130">RTX 4070 / RTX 3080</option>
+                    <option value="110">RTX 3070 / RX 6700 XT</option>
+                    <option value="90">RTX 4060 / RTX 2080</option>
+                    <option value="80">RTX 3060 / RX 6600 XT</option>
+                    <option value="60">GTX 1660 Super / GTX 1070</option>
+                    <option value="45">GTX 1060 (6GB) / RX 580</option>
+                    <option value="30" selected>GTX 1050 Ti / RX 560</option>
+                    <option value="10">内蔵GPUでも可</option>
+                </select>
+            </div>
+
+            <label>推奨 メモリ (RAM)</label>
+            <select id="game-ram" class="normal-select">
+                <option value="32">32 GB</option>
+                <option value="16">16 GB</option>
+                <option value="8" selected>8 GB</option>
+                <option value="4">4 GB</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn-check" onclick="checkSpecs()">動作を判定する</button>
+
+    <!-- 結果表示エリア -->
+    <div id="result" class="result-box">
+        <div id="result-title" class="result-title"></div>
+        <div id="result-details"></div>
+        
+        <!-- FPS表示エリア (動的に生成) -->
+        <div id="fps-container"></div>
+    </div>
+</div>
+
+<script>
+    function searchSelect(inputElem, selectId) {
+        const text = inputElem.value.toLowerCase().trim();
+        const selectElem = document.getElementById(selectId);
+        if (!text) return;
+
+        const options = Array.from(selectElem.options);
+        let matches = options.filter(opt => opt.text.toLowerCase().includes(text));
+        
+        if (matches.length === 0) {
+            const numbers = text.match(/\d{3,5}/g); 
+            if (numbers) {
+                numbers.forEach(num => {
+                    const subMatches = options.filter(opt => opt.text.toLowerCase().includes(num));
+                    matches = matches.concat(subMatches);
+                });
+            }
+        }
+
+        if (matches.length > 0) {
+            matches.sort((a, b) => a.text.length - b.text.length);
+            if (selectElem.selectedIndex !== matches[0].index) {
+                selectElem.selectedIndex = matches[0].index;
+                selectElem.style.backgroundColor = "#dcfce7";
+                selectElem.style.transition = "background-color 0.1s";
+                setTimeout(() => { 
+                    selectElem.style.backgroundColor = "#fff"; 
+                    selectElem.style.transition = "background-color 0.4s";
+                }, 300);
+            }
+        }
+    }
+
+    function loadPreset(game) {
+        const cpu = document.getElementById('game-cpu');
+        const gpu = document.getElementById('game-gpu');
+        const ram = document.getElementById('game-ram');
+
+        if (game === 'valorant') {
+            cpu.value = "40"; gpu.value = "30"; ram.value = "8";
+        } else if (game === 'apex') {
+            cpu.value = "40"; gpu.value = "60"; ram.value = "8";
+        } else if (game === 'cyberpunk') {
+            cpu.value = "110"; gpu.value = "80"; ram.value = "16";
+        }
+        
+        [cpu, gpu, ram].forEach(el => {
+            el.style.backgroundColor = "#dcfce7";
+            setTimeout(() => el.style.backgroundColor = "#fff", 400);
+        });
+    }
+
+    // FPSによる文字色判定
+    function getFpsColor(fps) {
+        if (fps >= 144) return "#3b82f6"; // 青(超快適)
+        if (fps >= 60) return "#10b981";  // 緑(快適)
+        if (fps >= 30) return "#f59e0b";  // オレンジ(妥協)
+        return "#ef4444";                 // 赤(厳しい)
+    }
+
+    function checkSpecs() {
+        // スペック取得
+        const myCpu = parseInt(document.getElementById('my-cpu').value);
+        const myGpu = parseInt(document.getElementById('my-gpu').value);
+        const myRam = parseInt(document.getElementById('my-ram').value);
+        const myCpuText = document.getElementById('my-cpu').options[document.getElementById('my-cpu').selectedIndex].text;
+        const myGpuText = document.getElementById('my-gpu').options[document.getElementById('my-gpu').selectedIndex].text;
+
+        const gameCpuRec = parseInt(document.getElementById('game-cpu').value);
+        const gameGpuRec = parseInt(document.getElementById('game-gpu').value);
+        const gameRamRec = parseInt(document.getElementById('game-ram').value);
+
+        // ボーダーライン計算
+        const cpuMinThreshold = gameCpuRec - 30;
+        const gpuMinThreshold = gameGpuRec - 30;
+        const ramMinThreshold = gameRamRec > 8 ? 8 : 4;
+
+        let status = 2; 
+        let detailsHtml = '';
+
+        // 各パーツ評価関数
+        function evaluatePart(partName, myVal, myText, recVal, minVal, isRam = false) {
+            let msg = ''; let color = '';
+            let displayVal = isRam ? `${myVal} GB` : myText;
+            
+            if (myVal >= recVal) {
+                msg = `✅ <b>${partName}</b>: 余裕です。<br><span style="font-size:0.9rem; color:#4b5563;">あなたの構成 (${displayVal}) は推奨要件をクリアしています。</span>`;
+                color = '#10b981';
+            } else if (myVal >= minVal) {
+                msg = `⚠️ <b>${partName}</b>: 動作はしますが、設定を下げる必要があります。<br><span style="font-size:0.9rem; color:#4b5563;">あなたの構成 (${displayVal}) は推奨スペックに届いていません。</span>`;
+                color = '#f59e0b';
+                if (status > 1) status = 1;
+            } else {
+                msg = `❌ <b>${partName}</b>: パワー不足です。<br><span style="font-size:0.9rem; color:#4b5563;">あなたの構成 (${displayVal}) ではカクつくか、起動しない可能性があります。</span>`;
+                color = '#ef4444';
+                status = 0;
+            }
+            return `<div class="detail-item" style="border-left-color: ${color}">${msg}</div>`;
+        }
+
+        detailsHtml += evaluatePart('CPU', myCpu, myCpuText, gameCpuRec, cpuMinThreshold);
+        detailsHtml += evaluatePart('グラボ(GPU)', myGpu, myGpuText, gameGpuRec, gpuMinThreshold);
+        detailsHtml += evaluatePart('メモリ', myRam, myRam, gameRamRec, ramMinThreshold, true);
+
+        // ====== 📊 FPS 推計ロジック ======
+        
+        // 1. ボトルネック(足枷)になっているパーツの比率を出す
+        // 要求スペックに対して何倍の性能があるか (例: 要求スコア60で、自分のGPUが120なら2倍)
+        const gpuRatio = myGpu / Math.max(10, gameGpuRec); // 0割回避
+        const cpuRatio = myCpu / Math.max(10, gameCpuRec);
+        const bottleneckRatio = Math.min(gpuRatio, cpuRatio);
+
+        // 2. メモリ不足によるペナルティ
+        let ramPenalty = 1.0;
+        if (myRam < gameRamRec) ramPenalty = 0.8; // 推奨未満なら-20%
+        if (myRam < ramMinThreshold) ramPenalty = 0.5; // 最低未満なら激減
+
+        // 3. ゲームの重さによるベースFPS補正
+        // 軽いゲーム（要求スコア45以下）はFPSが出やすいため倍率を上げる
+        const isLightGame = gameGpuRec <= 45;
+        const gameWeight = isLightGame ? 1.6 : 1.0; 
+
+        // 4. ベースFPSの算出 (要求ピッタリなら高設定で60FPSを基準とする)
+        // Math.pow(x, 0.8) をかけて、ハイスペック時の数値がインフレしすぎないようにする
+        let baseHighFps = 60 * Math.pow(bottleneckRatio, 0.8) * gameWeight * ramPenalty;
+        
+        // 5. 各画質設定でのFPS割り出し
+        let fpsHigh = Math.max(1, Math.floor(baseHighFps));
+        let fpsMid = Math.max(1, Math.floor(baseHighFps * 1.5));
+        let fpsLow = Math.max(1, Math.floor(baseHighFps * 2.3));
+
+        // 999以上の非現実的な数値をカンストさせる
+        fpsHigh = fpsHigh > 999 ? 999 : fpsHigh;
+        fpsMid = fpsMid > 999 ? 999 : fpsMid;
+        fpsLow = fpsLow > 999 ? 999 : fpsLow;
+        // ===================================
+
+        // 描画処理
+        const resultBox = document.getElementById('result');
+        const resultTitle = document.getElementById('result-title');
+        const resultDetails = document.getElementById('result-details');
+        const fpsContainer = document.getElementById('fps-container');
+
+        resultBox.style.display = 'block';
+        resultDetails.innerHTML = detailsHtml;
+        resultTitle.className = 'result-title'; 
+        
+        if (status === 2) {
+            resultTitle.innerHTML = '🎉 判定：高設定で快適にプレイ可能です！';
+            resultTitle.classList.add('status-ok');
+        } else if (status === 1) {
+            resultTitle.innerHTML = '🔧 判定：画質を「低設定」にすれば遊べます！';
+            resultTitle.classList.add('status-warn');
+        } else {
+            resultTitle.innerHTML = '😭 判定：このPCで遊ぶのはかなり厳しいです';
+            resultTitle.classList.add('status-bad');
+        }
+
+        // FPS表示エリアの組み立て
+        fpsContainer.innerHTML = `
+            <div class="fps-section">
+                <h3>📊 推定FPS (フルHD 1080p)</h3>
+                <div class="fps-grid">
+                    <div class="fps-card">
+                        <div class="fps-label">高画質 設定</div>
+                        <div class="fps-value" style="color: ${getFpsColor(fpsHigh)}">~ ${fpsHigh} <span style="font-size:1rem; font-weight:normal;">fps</span></div>
+                    </div>
+                    <div class="fps-card">
+                        <div class="fps-label">中画質 設定</div>
+                        <div class="fps-value" style="color: ${getFpsColor(fpsMid)}">~ ${fpsMid} <span style="font-size:1rem; font-weight:normal;">fps</span></div>
+                    </div>
+                    <div class="fps-card">
+                        <div class="fps-label">低画質 設定</div>
+                        <div class="fps-value" style="color: ${getFpsColor(fpsLow)}">~ ${fpsLow} <span style="font-size:1rem; font-weight:normal;">fps</span></div>
+                    </div>
+                </div>
+                <p class="fps-note">※FPSはあくまで目安です。実際の数値はゲームエンジンやマップ状況によって変動します。<br>60fps以上で「快適」、144fps以上で「超快適（競技向け）」となります。</p>
+            </div>
+        `;
+        
+        // スムーズスクロール
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+
+</body>
+</html>
