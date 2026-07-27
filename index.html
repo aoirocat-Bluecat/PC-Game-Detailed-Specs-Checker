@@ -275,13 +275,18 @@
             
             <label>CPU (プロセッサ)</label>
             <div class="search-select-group">
-                <input type="text" placeholder="🔍 検索 (例: 285K, Ultra 7, Quad, 4コア)" oninput="searchSelect(this, 'my-cpu')">
+                <input type="text" placeholder="🔍 検索 (例: 285K, i5, Quad)" oninput="searchSelect(this, 'my-cpu')">
                 <select id="my-cpu">
-                    <optgroup label="コア数での大まかな表記 (Dual / Quad等)">
-                        <option value="110">8コア / Octa Core プロセッサ (オクタコア)</option>
-                        <option value="90">6コア / Hexa Core プロセッサ (ヘキサコア)</option>
-                        <option value="50">4コア / Quad Core プロセッサ (クアッドコア)</option>
-                        <option value="20">2コア / Dual Core プロセッサ (デュアルコア)</option>
+                    <optgroup label="世代表記なし / 大まかな表記">
+                        <option value="50">Intel Core i7 (世代指定なし)</option>
+                        <option value="35">Intel Core i5 (世代指定なし)</option>
+                        <option value="20">Intel Core i3 (世代指定なし)</option>
+                        <option value="50">AMD Ryzen 7 (世代指定なし)</option>
+                        <option value="35">AMD Ryzen 5 (世代指定なし)</option>
+                        <option value="110">8コア / Octa Core (オクタコア)</option>
+                        <option value="90">6コア / Hexa Core (ヘキサコア)</option>
+                        <option value="50">4コア / Quad Core (クアッドコア)</option>
+                        <option value="20">2コア / Dual Core (デュアルコア)</option>
                     </optgroup>
                     <optgroup label="Intel Core Ultra (最新デスクトップ)">
                         <option value="170">Core Ultra 9 285K</option>
@@ -344,8 +349,17 @@
 
             <label>GPU (グラフィックボード)</label>
             <div class="search-select-group">
-                <input type="text" placeholder="🔍 検索 (例: 5090, 4070, RX 7700)" oninput="searchSelect(this, 'my-gpu')">
+                <input type="text" placeholder="🔍 検索 (例: 2GB, 5090, 4070)" oninput="searchSelect(this, 'my-gpu')">
                 <select id="my-gpu">
+                    <optgroup label="VRAM (ビデオメモリ) 容量での表記">
+                        <option value="130">16GB VRAM 以上</option>
+                        <option value="90">12GB VRAM</option>
+                        <option value="80">8GB VRAM</option>
+                        <option value="45">6GB VRAM</option>
+                        <option value="35">4GB VRAM</option>
+                        <option value="25">2GB VRAM / 3GB VRAM</option>
+                        <option value="15">1GB VRAM 以下</option>
+                    </optgroup>
                     <optgroup label="NVIDIA RTX 50シリーズ (最新世代)">
                         <option value="250">RTX 5090 (最強クラス)</option>
                         <option value="200">RTX 5080</option>
@@ -449,11 +463,16 @@
             <div class="search-select-group">
                 <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-cpu')">
                 <select id="game-cpu">
-                    <optgroup label="コア数での大まかな表記 (Dual / Quad等)">
-                        <option value="110">8コア / Octa Core プロセッサ (オクタコア)</option>
-                        <option value="90">6コア / Hexa Core プロセッサ (ヘキサコア)</option>
-                        <option value="50">4コア / Quad Core プロセッサ (クアッドコア)</option>
-                        <option value="20">2コア / Dual Core プロセッサ (デュアルコア)</option>
+                    <optgroup label="世代表記なし / 大まかな表記">
+                        <option value="50">Intel Core i7 (世代指定なし)</option>
+                        <option value="35">Intel Core i5 (世代指定なし)</option>
+                        <option value="20">Intel Core i3 (世代指定なし)</option>
+                        <option value="50">AMD Ryzen 7 (世代指定なし)</option>
+                        <option value="35">AMD Ryzen 5 (世代指定なし)</option>
+                        <option value="110">8コア / Octa Core (オクタコア)</option>
+                        <option value="90">6コア / Hexa Core (ヘキサコア)</option>
+                        <option value="50">4コア / Quad Core (クアッドコア)</option>
+                        <option value="20">2コア / Dual Core (デュアルコア)</option>
                     </optgroup>
                     <optgroup label="Intel Core Ultra (最新デスクトップ)">
                         <option value="170">Core Ultra 9 285K</option>
@@ -518,6 +537,15 @@
             <div class="search-select-group">
                 <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-gpu')">
                 <select id="game-gpu">
+                    <optgroup label="VRAM (ビデオメモリ) 容量での表記">
+                        <option value="130">16GB VRAM 以上</option>
+                        <option value="90">12GB VRAM</option>
+                        <option value="80">8GB VRAM</option>
+                        <option value="45">6GB VRAM</option>
+                        <option value="35">4GB VRAM</option>
+                        <option value="25">2GB VRAM / 3GB VRAM</option>
+                        <option value="15">1GB VRAM 以下</option>
+                    </optgroup>
                     <optgroup label="NVIDIA RTX 50シリーズ (最新世代)">
                         <option value="250">RTX 5090 (最強クラス)</option>
                         <option value="200">RTX 5080</option>
@@ -624,7 +652,7 @@
 
         const options = Array.from(selectElem.options);
         
-        // Quad, Dualなどの英語のキーワード対応（大文字小文字を区別せず検索）
+        // 英語のキーワード（Quad, i5, 2GBなど）対応（大文字小文字を区別せず検索）
         let matches = options.filter(opt => opt.text.toLowerCase().includes(text));
         
         // 半角英数字の型番検索対応（例: "3060"）
@@ -639,6 +667,7 @@
         }
 
         if (matches.length > 0) {
+            // 文字数が少ないものを優先 (例: "i5"と検索した時に "Core i5-14600K" より "Core i5 (世代指定なし)" を優先させる)
             matches.sort((a, b) => a.text.length - b.text.length);
             if (selectElem.selectedIndex !== matches[0].index) {
                 selectElem.selectedIndex = matches[0].index;
