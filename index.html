@@ -136,6 +136,40 @@
             cursor: pointer;
         }
 
+        /* 同時起動アプリ(チェックボックス)のスタイル */
+        .app-checks {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .app-checks-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: normal;
+            cursor: pointer;
+            margin: 8px 0;
+            color: #1e293b;
+        }
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
         button.btn-check {
             display: block;
             width: 100%;
@@ -300,7 +334,7 @@
 
 <div class="container">
     <h1>🎮 PCゲーム 詳細スペックチェッカー</h1>
-    <p class="subtitle">あなたが見込めるFPS（フレームレート）も自動算出して判定します</p>
+    <p class="subtitle">DiscordやOBS(配信・録画)同時起動時の負荷も考慮して判定します</p>
 
     <div class="grid">
         <!-- 自分のPCスペック -->
@@ -504,6 +538,19 @@
                 <option value="8">8 GB</option>
                 <option value="4">4 GB 以下</option>
             </select>
+
+            <!-- 🎧 同時起動アプリの設定 -->
+            <div class="app-checks">
+                <div class="app-checks-title">🎙️ 同時起動するアプリ (負荷設定)</div>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-discord">
+                    Discord (通話・画面共有等)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-obs">
+                    OBS Studio (配信・録画)
+                </label>
+            </div>
         </div>
 
         <!-- ゲームの要求スペック -->
@@ -516,7 +563,6 @@
                 <button class="preset-btn" onclick="loadPreset('cyberpunk')">サイバーパンク<br>(重い)</button>
             </div>
 
-            <!-- 要求スペックも「自分のPC」と全く同じ詳細リストを使用 -->
             <label>推奨 CPU</label>
             <div class="search-select-group">
                 <input type="text" placeholder="🔍 ストアの記載をコピペ..." oninput="searchSelect(this, 'game-cpu')">
@@ -741,7 +787,6 @@
         if (!text) return;
 
         const options = Array.from(selectElem.options);
-        
         let matches = options.filter(opt => opt.text.toLowerCase().includes(text));
         
         if (matches.length === 0) {
@@ -794,7 +839,6 @@
         return "#ef4444";                 
     }
 
-    // 文字数オーバーを防ぐため、長い型番（「/」や「(」を含むもの）を短縮する関数
     function shortenText(text) {
         let shortName = text.split('/')[0].trim();
         shortName = shortName.split('(')[0].trim();
@@ -802,15 +846,43 @@
     }
 
     function checkSpecs() {
-        const myCpu = parseInt(document.getElementById('my-cpu').value);
-        const myGpu = parseInt(document.getElementById('my-gpu').value);
-        const myRam = parseInt(document.getElementById('my-ram').value);
+        // 基本入力値の取得
+        const rawCpu = parseInt(document.getElementById('my-cpu').value);
+        const rawGpu = parseInt(document.getElementById('my-gpu').value);
+        const rawRam = parseInt(document.getElementById('my-ram').value);
         const myCpuText = document.getElementById('my-cpu').options[document.getElementById('my-cpu').selectedIndex].text;
         const myGpuText = document.getElementById('my-gpu').options[document.getElementById('my-gpu').selectedIndex].text;
 
         const gameCpuRec = parseInt(document.getElementById('game-cpu').value);
         const gameGpuRec = parseInt(document.getElementById('game-gpu').value);
         const gameRamRec = parseInt(document.getElementById('game-ram').value);
+
+        // 同時起動アプリ(負荷)の取得
+        const isDiscord = document.getElementById('check-discord').checked;
+        const isObs = document.getElementById('check-obs').checked;
+
+        // ====== 🎙️ バックグラウンド負荷の適用 ======
+        let effectiveCpu = rawCpu;
+        let effectiveGpu = rawGpu;
+        let effectiveRam = rawRam;
+        let bgFpsMult = 1.0;
+
+        if (isDiscord) {
+            effectiveCpu -= 10;     // CPU使用率ダウン
+            effectiveRam -= 2;      // メモリ約2GB消費
+            bgFpsMult *= 0.90;      // FPS約10%削減
+        }
+        if (isObs) {
+            effectiveCpu -= 20;     // エンコード負荷
+            effectiveGpu -= 15;     // 画面キャプチャ・GPUエンコード負荷
+            effectiveRam -= 4;      // メモリ約4GB消費
+            bgFpsMult *= 0.80;      // FPS約20%削減
+        }
+
+        effectiveCpu = Math.max(10, effectiveCpu);
+        effectiveGpu = Math.max(10, effectiveGpu);
+        effectiveRam = Math.max(2, effectiveRam);
+        // ==========================================
 
         const cpuMinThreshold = gameCpuRec - 30;
         const gpuMinThreshold = gameGpuRec - 30;
@@ -819,9 +891,9 @@
         let status = 2; 
         let detailsHtml = '';
 
-        function evaluatePart(partName, myVal, myText, recVal, minVal, isRam = false) {
+        function evaluatePart(partName, myVal, myText, recVal, minVal, isRam = false, ramVal = 0) {
             let msg = ''; let color = '';
-            let displayVal = isRam ? `${myVal} GB` : myText;
+            let displayVal = isRam ? `${ramVal} GB` : myText;
             
             if (myVal >= recVal) {
                 msg = `✅ <b>${partName}</b>: 余裕です。<br><span style="font-size:0.9rem; color:#4b5563;">あなたの構成 (${displayVal}) は推奨要件をクリアしています。</span>`;
@@ -838,22 +910,36 @@
             return `<div class="detail-item" style="border-left-color: ${color}">${msg}</div>`;
         }
 
-        detailsHtml += evaluatePart('CPU', myCpu, myCpuText, gameCpuRec, cpuMinThreshold);
-        detailsHtml += evaluatePart('グラボ(GPU)', myGpu, myGpuText, gameGpuRec, gpuMinThreshold);
-        detailsHtml += evaluatePart('メモリ', myRam, myRam, gameRamRec, ramMinThreshold, true);
+        detailsHtml += evaluatePart('CPU', effectiveCpu, myCpuText, gameCpuRec, cpuMinThreshold);
+        detailsHtml += evaluatePart('グラボ(GPU)', effectiveGpu, myGpuText, gameGpuRec, gpuMinThreshold);
+        detailsHtml += evaluatePart('メモリ', effectiveRam, effectiveRam, gameRamRec, ramMinThreshold, true, rawRam);
 
-        const gpuRatio = myGpu / Math.max(10, gameGpuRec); 
-        const cpuRatio = myCpu / Math.max(10, gameCpuRec);
+        // 同時起動のアドバイス表示
+        if (isDiscord || isObs) {
+            let activeApps = [];
+            if (isDiscord) activeApps.push("Discord");
+            if (isObs) activeApps.push("OBS Studio");
+            
+            let noticeMsg = `ℹ️ <b>【負荷適用中】</b> ${activeApps.join(" + ")} が同時起動している想定で判定・FPS計算を行っています。`;
+            if (effectiveRam < gameRamRec) {
+                noticeMsg += `<br><span style="color:#e11d48; font-size:0.85rem;">※同時起動によりメモリ空き容量が不足しやすくなっています。</span>`;
+            }
+            detailsHtml += `<div class="detail-item" style="border-left-color: #3b82f6; background:#eff6ff;">${noticeMsg}</div>`;
+        }
+
+        // ====== 📊 FPS 推計ロジック ======
+        const gpuRatio = effectiveGpu / Math.max(10, gameGpuRec); 
+        const cpuRatio = effectiveCpu / Math.max(10, gameCpuRec);
         const bottleneckRatio = Math.min(gpuRatio, cpuRatio);
 
         let ramPenalty = 1.0;
-        if (myRam < gameRamRec) ramPenalty = 0.8;
-        if (myRam < ramMinThreshold) ramPenalty = 0.5;
+        if (effectiveRam < gameRamRec) ramPenalty = 0.8;
+        if (effectiveRam < ramMinThreshold) ramPenalty = 0.5;
 
         const isLightGame = gameGpuRec <= 45;
         const gameWeight = isLightGame ? 1.6 : 1.0; 
 
-        let baseHighFps = 60 * Math.pow(bottleneckRatio, 0.8) * gameWeight * ramPenalty;
+        let baseHighFps = 60 * Math.pow(bottleneckRatio, 0.8) * gameWeight * ramPenalty * bgFpsMult;
         
         let fpsHigh = Math.max(1, Math.floor(baseHighFps));
         let fpsMid = Math.max(1, Math.floor(baseHighFps * 1.5));
@@ -908,7 +994,7 @@
                         <div class="fps-value" style="color: ${getFpsColor(fpsLow)}">~ ${fpsLow} <span style="font-size:1rem; font-weight:normal;">fps</span></div>
                     </div>
                 </div>
-                <p class="fps-note">※FPSはあくまで目安です。実際の数値はゲームエンジンやマップ状況によって変動します。<br>60fps以上で「快適」、144fps以上で「超快適（競技向け）」となります。</p>
+                <p class="fps-note">※FPSはあくまで目安です。実際の数値は配信解像度やゲームエンジンによって変動します。<br>60fps以上で「快適」、144fps以上で「超快適（競技向け）」となります。</p>
             </div>
         `;
         
@@ -918,20 +1004,23 @@
         const reqCpuText = document.getElementById('game-cpu').options[document.getElementById('game-cpu').selectedIndex].text;
         const reqGpuText = document.getElementById('game-gpu').options[document.getElementById('game-gpu').selectedIndex].text;
 
-        // 型番を短縮して文字数オーバーを回避する
         const shortMyCpu = shortenText(myCpuText);
         const shortMyGpu = shortenText(myGpuText);
         const shortReqCpu = shortenText(reqCpuText);
         const shortReqGpu = shortenText(reqGpuText);
 
-        const shareText = `🎮PCゲーム スペックチェッカー\n判定: ${statusShortText}\n\n💻自PC: ${shortMyCpu} / ${shortMyGpu} / ${myRam}GB\n🕹要求: ${shortReqCpu} / ${shortReqGpu} / ${gameRamRec}GB\n\n📊推定FPS: 高 ${fpsHigh} / 中 ${fpsMid} / 低 ${fpsLow}\n\n#PCゲームスペックチェッカー\n`;
+        let bgAppTag = "";
+        if (isDiscord && isObs) bgAppTag = "\n(Discord+OBS起動)";
+        else if (isDiscord) bgAppTag = "\n(Discord起動)";
+        else if (isObs) bgAppTag = "\n(OBS起動)";
+
+        const shareText = `🎮PCゲーム スペックチェッカー\n判定: ${statusShortText}${bgAppTag}\n\n💻自PC: ${shortMyCpu} / ${shortMyGpu} / ${rawRam}GB\n🕹要求: ${shortReqCpu} / ${shortReqGpu} / ${gameRamRec}GB\n\n📊推定FPS: 高 ${fpsHigh} / 中 ${fpsMid} / 低 ${fpsLow}\n\n#PC解像度チェッカー\n`;
         
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(siteUrl)}`;
         
         const shareBtn = document.getElementById('share-twitter');
         shareBtn.href = twitterUrl;
         document.getElementById('share-container').style.display = 'block';
-        // -----------------------------------
 
         resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
