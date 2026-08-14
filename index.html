@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PCゲーム 詳細スペックチェッカー</title>
+    <!-- HTMLを画像化するライブラリ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -136,7 +138,7 @@
             cursor: pointer;
         }
 
-        /* 同時起動アプリ(チェックボックス)のスタイル */
+        /* 設定オプション(チェックボックス)のスタイル */
         .app-checks {
             background: #f1f5f9;
             padding: 15px;
@@ -247,6 +249,43 @@
             color: white;
         }
 
+        /* 推定価格セクションスタイル */
+        .price-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #cbd5e1;
+        }
+        .price-section h3 {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 0;
+            color: #1f2937;
+        }
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .price-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .price-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .price-value {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
         /* FPS表示用スタイル */
         .fps-section {
             margin-top: 25px;
@@ -290,43 +329,70 @@
             margin-top: 15px;
         }
         @media (max-width: 600px) {
-            .fps-grid {
+            .fps-grid, .price-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* シェアボタン用スタイル */
+        /* シェアエリアのスタイル */
         .share-container {
             text-align: center;
             margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
         }
         
-        .btn-twitter {
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn-action {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background-color: #000000;
-            color: white;
-            padding: 12px 24px;
+            padding: 12px 20px;
             border-radius: 9999px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 1rem;
-            transition: opacity 0.2s;
+            font-size: 0.95rem;
+            transition: all 0.2s;
             border: none;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
+        .btn-capture {
+            background-color: #059669;
+            color: white;
+        }
+        .btn-capture:hover {
+            background-color: #047857;
+        }
+
+        .btn-twitter {
+            background-color: #000000;
+            color: white;
+        }
         .btn-twitter:hover {
-            opacity: 0.8;
+            opacity: 0.85;
             color: white;
         }
         
-        .btn-twitter svg {
+        .btn-action svg {
             width: 18px;
             height: 18px;
             fill: currentColor;
+        }
+
+        .capture-guide {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -334,7 +400,7 @@
 
 <div class="container">
     <h1>🎮 PCゲーム 詳細スペックチェッカー</h1>
-    <p class="subtitle">DiscordやOBS(配信・録画)同時起動時の負荷も考慮して判定します</p>
+    <p class="subtitle">あなたが見込めるFPSやPCの推定価格も自動算出して判定します</p>
 
     <div class="grid">
         <!-- 自分のPCスペック -->
@@ -539,16 +605,20 @@
                 <option value="4">4 GB 以下</option>
             </select>
 
-            <!-- 🎧 同時起動アプリの設定 -->
+            <!-- 🎧 設定オプション -->
             <div class="app-checks">
-                <div class="app-checks-title">🎙️ 同時起動するアプリ (負荷設定)</div>
+                <div class="app-checks-title">⚙️ 追加オプション</div>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-price" checked>
+                    💰 PCの推定価格（相場）を表示する
+                </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="check-discord">
-                    Discord (通話・画面共有等)
+                    🎙️ Discord (通話・画面共有等)
                 </label>
                 <label class="checkbox-label">
                     <input type="checkbox" id="check-obs">
-                    OBS Studio (配信・録画)
+                    📹 OBS Studio (配信・録画)
                 </label>
             </div>
         </div>
@@ -762,20 +832,32 @@
 
     <button class="btn-check" onclick="checkSpecs()">動作を判定する</button>
 
-    <!-- 結果表示エリア -->
+    <!-- 結果表示エリア (このエリア全体を画像化します) -->
     <div id="result" class="result-box">
-        <div id="result-title" class="result-title"></div>
-        <div id="result-details"></div>
+        <div id="capture-area" style="background: #ffffff; padding: 10px; border-radius: 8px;">
+            <div id="result-title" class="result-title"></div>
+            <div id="result-details"></div>
+            
+            <!-- 推定価格表示エリア (動的に生成) -->
+            <div id="price-container"></div>
+
+            <!-- FPS表示エリア (動的に生成) -->
+            <div id="fps-container"></div>
+        </div>
         
-        <!-- FPS表示エリア (動的に生成) -->
-        <div id="fps-container"></div>
-        
-        <!-- シェアボタンエリア -->
+        <!-- シェア＆画像保存ボタンエリア -->
         <div class="share-container" id="share-container" style="display: none;">
-            <a href="#" id="share-twitter" target="_blank" rel="noopener noreferrer" class="btn-twitter">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                結果をポストする
-            </a>
+            <div class="share-buttons">
+                <button type="button" class="btn-action btn-capture" onclick="captureAndShare()">
+                    <svg viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+                    📸 結果画像を保存 / コピー
+                </button>
+                <a href="#" id="share-twitter" target="_blank" rel="noopener noreferrer" class="btn-action btn-twitter">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    X でポストする
+                </a>
+            </div>
+            <p class="capture-guide">💡 画像を保存またはコピーした後、「Xでポストする」を開いて画像を貼り付けてください！</p>
         </div>
     </div>
 </div>
@@ -787,6 +869,7 @@
         if (!text) return;
 
         const options = Array.from(selectElem.options);
+        
         let matches = options.filter(opt => opt.text.toLowerCase().includes(text));
         
         if (matches.length === 0) {
@@ -845,6 +928,65 @@
         return shortName;
     }
 
+    // ====== 📸 結果画像をキャプチャして保存/コピー/共有する関数 ======
+    async function captureAndShare() {
+        const captureArea = document.getElementById('capture-area');
+        
+        try {
+            // html2canvasで高画質にキャプチャ
+            const canvas = await html2canvas(captureArea, {
+                scale: 2, // 2倍解像度で綺麗に
+                backgroundColor: '#ffffff'
+            });
+
+            canvas.toBlob(async (blob) => {
+                if (!blob) return;
+
+                // 1. スマホ等のWeb Share API対応ブラウザ（直接画像共有）
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'specs.png', { type: 'image/png' })] })) {
+                    try {
+                        const file = new File([blob], 'pc-game-specs.png', { type: 'image/png' });
+                        await navigator.share({
+                            title: 'PCゲーム スペックチェッカー結果',
+                            files: [file]
+                        });
+                        return;
+                    } catch (err) {
+                        console.log('Share dismissed or failed, fallback to copy/download', err);
+                    }
+                }
+
+                // 2. PC向け：クリップボードへ画像コピー
+                let copied = false;
+                if (navigator.clipboard && window.ClipboardItem) {
+                    try {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({ 'image/png': blob })
+                        ]);
+                        copied = true;
+                    } catch (e) {
+                        console.log('Clipboard write failed:', e);
+                    }
+                }
+
+                // 3. 画像ファイルのダウンロード実行
+                const link = document.createElement('a');
+                link.download = 'pc-game-specs-result.png';
+                link.href = URL.createObjectURL(blob);
+                link.click();
+
+                if (copied) {
+                    alert('📸 画像を保存し、クリップボードにコピーしました！\n「Xでポストする」を開いて Ctrl+V（貼り付け）してください。');
+                } else {
+                    alert('📸 画像を保存しました！\n「Xでポストする」を開いて画像を添付してください。');
+                }
+            }, 'image/png');
+        } catch (error) {
+            console.error('Capture error:', error);
+            alert('画像の生成に失敗しました。');
+        }
+    }
+
     function checkSpecs() {
         // 基本入力値の取得
         const rawCpu = parseInt(document.getElementById('my-cpu').value);
@@ -857,7 +999,8 @@
         const gameGpuRec = parseInt(document.getElementById('game-gpu').value);
         const gameRamRec = parseInt(document.getElementById('game-ram').value);
 
-        // 同時起動アプリ(負荷)の取得
+        // オプション取得
+        const isShowPrice = document.getElementById('check-price').checked;
         const isDiscord = document.getElementById('check-discord').checked;
         const isObs = document.getElementById('check-obs').checked;
 
@@ -868,15 +1011,15 @@
         let bgFpsMult = 1.0;
 
         if (isDiscord) {
-            effectiveCpu -= 10;     // CPU使用率ダウン
-            effectiveRam -= 2;      // メモリ約2GB消費
-            bgFpsMult *= 0.90;      // FPS約10%削減
+            effectiveCpu -= 10;
+            effectiveRam -= 2;
+            bgFpsMult *= 0.90;
         }
         if (isObs) {
-            effectiveCpu -= 20;     // エンコード負荷
-            effectiveGpu -= 15;     // 画面キャプチャ・GPUエンコード負荷
-            effectiveRam -= 4;      // メモリ約4GB消費
-            bgFpsMult *= 0.80;      // FPS約20%削減
+            effectiveCpu -= 20;
+            effectiveGpu -= 15;
+            effectiveRam -= 4;
+            bgFpsMult *= 0.80;
         }
 
         effectiveCpu = Math.max(10, effectiveCpu);
@@ -914,7 +1057,6 @@
         detailsHtml += evaluatePart('グラボ(GPU)', effectiveGpu, myGpuText, gameGpuRec, gpuMinThreshold);
         detailsHtml += evaluatePart('メモリ', effectiveRam, effectiveRam, gameRamRec, ramMinThreshold, true, rawRam);
 
-        // 同時起動のアドバイス表示
         if (isDiscord || isObs) {
             let activeApps = [];
             if (isDiscord) activeApps.push("Discord");
@@ -926,6 +1068,32 @@
             }
             detailsHtml += `<div class="detail-item" style="border-left-color: #3b82f6; background:#eff6ff;">${noticeMsg}</div>`;
         }
+
+        // ====== 💰 推定価格の計算ロジック ======
+        let estNewPrice = 0;
+        let estUsedPrice = 0;
+
+        if (isShowPrice) {
+            let cpuCost = rawCpu * 550;
+            let gpuCost = Math.pow(rawGpu, 1.25) * 450;
+            let ramCost = rawRam * 600;
+            let baseCost = 55000;
+
+            if (rawGpu <= 35) {
+                baseCost = 35000;
+                gpuCost = 0;
+            }
+
+            let totalEst = cpuCost + gpuCost + ramCost + baseCost;
+            
+            estNewPrice = Math.round(totalEst / 10000);
+            if (estNewPrice < 5) estNewPrice = 5;
+
+            let ageDiscount = (rawCpu <= 60 || rawGpu <= 60) ? 0.45 : 0.7;
+            estUsedPrice = Math.round((totalEst * ageDiscount) / 10000);
+            if (estUsedPrice < 2) estUsedPrice = 2;
+        }
+        // ======================================
 
         // ====== 📊 FPS 推計ロジック ======
         const gpuRatio = effectiveGpu / Math.max(10, gameGpuRec); 
@@ -952,6 +1120,7 @@
         const resultBox = document.getElementById('result');
         const resultTitle = document.getElementById('result-title');
         const resultDetails = document.getElementById('result-details');
+        const priceContainer = document.getElementById('price-container');
         const fpsContainer = document.getElementById('fps-container');
 
         resultBox.style.display = 'block';
@@ -975,6 +1144,28 @@
             statusShortText = "😭 動作は厳しい...";
             resultTitle.innerHTML = statusEmojiText;
             resultTitle.classList.add('status-bad');
+        }
+
+        // 推定価格のHTML生成
+        if (isShowPrice) {
+            priceContainer.innerHTML = `
+                <div class="price-section">
+                    <h3>💰 このPC構成の推定価格 (相場)</h3>
+                    <div class="price-grid">
+                        <div class="price-card">
+                            <div class="price-label">新品 BTOパソコン目安</div>
+                            <div class="price-value" style="color: #2563eb;">約 ${estNewPrice} <span style="font-size:1rem; font-weight:normal;">万円〜</span></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="price-label">中古・型落ち市場目安</div>
+                            <div class="price-value" style="color: #059669;">約 ${estUsedPrice} <span style="font-size:1rem; font-weight:normal;">万円〜</span></div>
+                        </div>
+                    </div>
+                    <p class="fps-note">※SSD 1TB、電源、ケース等を含む全体構成の概算です。セールや時期によって変動します。</p>
+                </div>
+            `;
+        } else {
+            priceContainer.innerHTML = "";
         }
 
         fpsContainer.innerHTML = `
@@ -1014,7 +1205,9 @@
         else if (isDiscord) bgAppTag = "\n(Discord起動)";
         else if (isObs) bgAppTag = "\n(OBS起動)";
 
-        const shareText = `🎮PCゲーム スペックチェッカー\n判定: ${statusShortText}${bgAppTag}\n\n💻自PC: ${shortMyCpu} / ${shortMyGpu} / ${rawRam}GB\n🕹要求: ${shortReqCpu} / ${shortReqGpu} / ${gameRamRec}GB\n\n📊推定FPS: 高 ${fpsHigh} / 中 ${fpsMid} / 低 ${fpsLow}\n\n#PC解像度チェッカー\n`;
+        let priceText = isShowPrice ? `💰推定相場: 約${estNewPrice}万円\n` : "";
+
+        const shareText = `🎮PCゲーム スペックチェッカー\n判定: ${statusShortText}${bgAppTag}\n\n💻自PC: ${shortMyCpu} / ${shortMyGpu} / ${rawRam}GB\n🕹要求: ${shortReqCpu} / ${shortReqGpu} / ${gameRamRec}GB\n${priceText}📊推定FPS: 高 ${fpsHigh} / 中 ${fpsMid} / 低 ${fpsLow}\n\n#PCゲームスペックチェッカー\n`;
         
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(siteUrl)}`;
         
